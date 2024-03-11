@@ -1,0 +1,13 @@
+.bootstrap_chat {
+  background-color: #DAA402;
+  min-height: 100vh;
+}
+
+.text-small {
+  font-size: 0.9rem;
+}
+
+.messages-box, .chat-box {
+  height: 500px;
+  overflow-y: auto;
+}

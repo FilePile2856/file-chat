@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Screen Sharing Example</title>
+  </head>
+  <body>
+    <h1>Screen Sharing Example</h1>
+    <div id="video-container"></div>
+
+    <script>
+      // Access the screen sharing API
+      const startScreenSharing = async () => {
+        try {
+          const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+          const videoElement = document.createElement("video");
+          videoElement.srcObject = stream;
+          videoElement.autoplay = true;
+          videoElement.controls = true;
+          document.getElementById("video-container").appendChild(videoElement);
+        } catch (error) {
+          console.error("Error accessing screen sharing:", error);
+        }
+      };
+
+      // Trigger screen sharing when a button is clicked
+      document.getElementById("start-sharing-button").addEventListener("click", startScreenSharing);
+    </script>
+  </body>
+</html>

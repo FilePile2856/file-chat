@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>file edu</title>
+    <link rel="stylesheet" href="https://filepile.xyz/bootstrap.min.css">
+    <link rel="stylesheet" href="https://filepile.xyz/Simple-Bootstrap-Chat.css">
+</head>
+
+<body><div class="bootstrap_chat">
+<div class="container py-5 px-4">
+  <!-- For demo purpose-->
+  <header class="text-center">
+    <h1 class="display-4 text-white">Filepile Chat</h1>
+  </header>
+
+  <h3 style='color: #ccc;font-size: 30px;'> </h3>
+    <!-- Chat Box-->
+    <div class="col-12 px-0" class="chat-box">
+      <div class="px-4 py-5 chat-box rounded bg-white" id="scrollable">        
+      </div>
+      
+      <!-- Typing area -->
+      <form action="" method="POST" class="bg-light rounded">
+        <input type="text" class="username" placeholder="User Name"/>
+        <input type="text" class="message" placeholder="Messages" style="width: 60%;"/>
+        <input type="submit"/>
+        color
+        <input type="color" style="margin: 5px;" id="usr_color"/>
+        <input type="text" id="url" placeholder="music url" style="width: 60%;"/>
+      </form>
+      
+        
+      
+
+    </div>
+  </div>
+</div>
+</div>
+    <script src="https://filepile.xyz/bootstrap.min.css"></script>
+</body>
+
+</html>
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+<script type="text/javascript">
+  
+  
+  var d = new Date();
+  var socket = io.connect('http://' + document.domain + ':' + location.port);
+  
+    socket.on( 'connect', function() {
+      socket.emit( 'event', {
+        data: 'User Connected'
+      } )
+      var form = $( 'form' ).on( 'submit', function( e ) {
+        e.preventDefault()
+        let user_name = $( 'input.username' ).val()
+        let user_input = $( 'input.message' ).val()
+        if ( user_input !== '' ) {
+          socket.emit( 'event', {
+            user_name : user_name,
+            message : user_input,
+            color : $( '#usr_color' ).val(),
+            url : $( '#url' ).val()
+          } )
+        }
+        $( 'input.message' ).val( '' ).focus()
+      } )
+    } )
+
+    socket.on( 'res', function( msg ) {
+      console.log( msg )
+      console.log( msg.message )
+      console.log( msg.color)
+      console.log( msg.url)
+      if(msg.message !== undefined && msg.url == '') {
+        $( 'h3' ).remove()
+        $( 'div.chat-box' ).append( `<div class="media w-50 mb-3">
+          <p class="medium text" style="padding-left: 15px; color:`+ msg.color + `;">`+msg.user_name+`</p>
+          <div class="media-body ml-3">
+            <div class="bg-light rounded py-2 px-3 mb-2">
+              <p class="text-small mb-0 text-muted">`+msg.message+`</p>
+              
+            </div>
+            <p class="small text-muted">`+d.getMonth()+ " / " + d.getDate()+' | '+d.getHours()+':'+d.getMinutes() +`</p>
+          </div>
+        </div>` )
+      }
+      else if(msg.message !== undefined && msg.url !== ''){
+        $( 'h3' ).remove()
+        $( 'div.chat-box' ).append( `<div class="media w-50 mb-3">
+          <p class="medium text" style="padding-left: 15px; color:`+ msg.color + `;">`+msg.user_name+`</p>
+          <div class="media-body ml-3">
+            <div class="bg-light rounded py-2 px-3 mb-2">
+              <p class="text-small mb-0 text-muted">`+msg.message+`</p>
+              <audio src="`+ msg.url +`" autoplay controls></audio>
+            </div>
+            <p class="small text-muted">`+d.getMonth()+ " / " + d.getDate()+' | '+d.getHours()+':'+d.getMinutes() +`</p>
+          </div>
+        </div>` )
+      }
+
+      
+      $('#scrollable').stop().animate({ scrollTop: $('#scrollable')[0].scrollHeight }, 1000);
+    })
+    //<audio id="audio" src="` + msg.url + `" autostart="true" ></audio>
+</script>
